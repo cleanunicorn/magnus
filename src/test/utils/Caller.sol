@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 contract Caller {
-
     // /*
     //     Calls the address and reverts if the call succeeded.
     // */
@@ -15,11 +14,13 @@ contract Caller {
     //         mstore(0x40, add(free, 32))
     //         revert(free, 32)
     //     }
-    // }    
+    // }
 
-    function call(address _addr, bytes calldata _data) external returns (bool, bytes memory) {
+    function call(address _addr, bytes calldata _data)
+        external
+        returns (bool, bytes memory)
+    {
         (bool ok, bytes memory data) = _addr.call(_data);
         return (ok, data);
     }
-
 }

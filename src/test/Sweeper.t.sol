@@ -3,14 +3,13 @@ pragma solidity ^0.8.0;
 
 import "ds-test/test.sol";
 
-import { Sweeper } from "../Sweeper.sol";
+import {Sweeper} from "../Sweeper.sol";
 import "./utils/Token.sol";
 import "./utils/Caller.sol";
 
 contract SweeperTest is DSTest {
-    Sweeper sweeper;
-    Token token;
-
+    Sweeper private sweeper;
+    Token private token;
 
     function setUp() public {
         // Create the sweeper
@@ -18,8 +17,6 @@ contract SweeperTest is DSTest {
 
         // Create a generic token
         token = new Token("Generic Token", "$$$");
-
-
     }
 
     function testSweep() public {
@@ -42,17 +39,23 @@ contract SweeperTest is DSTest {
         token.transfer(address(sweeper), 100);
 
         // Try to withdraw tokens as a different user
-        (bool ok, /* bytes memory data */) = user.call(
-            address(sweeper),
-            abi.encodeWithSelector(
-                sweeper.sweep.selector,
-                token,
-                address(user),
-                100
-            )
-        );
+        (
+            bool ok, /* bytes memory data */
 
-        assertTrue(!ok, "Should not be able to sweep tokens without permission");
+        ) = user.call(
+                address(sweeper),
+                abi.encodeWithSelector(
+                    sweeper.sweep.selector,
+                    token,
+                    address(user),
+                    100
+                )
+            );
+
+        assertTrue(
+            !ok,
+            "Should not be able to sweep tokens without permission"
+        );
     }
 
     function testShouldBeAbleToAddOwnersList() public {
@@ -64,8 +67,10 @@ contract SweeperTest is DSTest {
         assertTrue(sweeper.isOwner(address(user)), "Should be owner");
     }
 
-    function testFuzzSweepAmount(uint amountToSweep, uint amountToMint) public {
-        if (amountToSweep  > amountToMint) {
+    function testFuzzSweepAmount(uint256 amountToSweep, uint256 amountToMint)
+        public
+    {
+        if (amountToSweep > amountToMint) {
             return;
         }
 
@@ -80,4 +85,7 @@ contract SweeperTest is DSTest {
     }
 }
 
-contract User is Caller {}
+// User
+contract User is Caller {
+    //
+}

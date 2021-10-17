@@ -1,9 +1,9 @@
 {
-  "name": "dapptools-template",
-  "author": "Georgios Konstantopoulos",
-  "license": "Unlicense",
+  "name": "magnus",
+  "author": "Daniel Luca (@CleanUnicorn)",
+  "license": "Apache-2.0",
   "version": "1.0.0",
-  "description": "A template for building dapptools projects",
+  "description": "Sweeper contracts",
   "files": [
     "*.sol"
   ],
@@ -16,10 +16,6 @@
     "solhint-plugin-prettier": "^0.0.5"
   },
   "scripts": {
-    "prepublishOnly": "copyfiles -u 1 \"./src/**/*.sol\" --exclude \"./src/test/**/*.sol\" ./",
-    "postpublish": "rimraf ./*.sol",
-    "prepack": "yarn prepublishOnly",
-    "postpack": "yarn postpublish",
     "lint": "yarn prettier && yarn solhint",
     "lint:check": "yarn prettier:check && yarn solhint:check",
     "prettier": "yarn prettier:check --write",
