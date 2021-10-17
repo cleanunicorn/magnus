@@ -67,6 +67,17 @@ contract SweeperTest is DSTest {
         assertTrue(sweeper.isOwner(address(user)), "Should be owner");
     }
 
+    function testShouldSweepAllTokens() public {
+        token.mint(address(sweeper), 1000);
+
+        address[] memory tokens = new address[](1);
+        tokens[0] = address(token);
+
+        sweeper.sweepAll(tokens, address(this));
+        assertEq(token.balanceOf(address(sweeper)), 0);
+        assertEq(token.balanceOf(address(this)), 1000);
+    }
+
     function testFuzzSweepAmount(uint256 amountToSweep, uint256 amountToMint)
         public
     {

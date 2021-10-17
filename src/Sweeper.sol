@@ -23,15 +23,22 @@ contract Sweeper {
         _token.transfer(_to, _value);
     }
 
+    function sweepAll(
+        address[] calldata _tokens,
+        address _to
+    ) public onlyOwner {
+        for (uint i = 0; i < _tokens.length; i++) {
+            IERC20 token = IERC20(_tokens[i]);
+            uint balance = token.balanceOf(address(this));
+            token.transfer(_to, balance);
+        }
+    }
+
     function addOwner(address _newOwner) public {
         owners[_newOwner] = true;
     }
 
     function isOwner(address _owner) public view returns (bool) {
         return owners[_owner];
-    }
-
-    function untested() public pure returns (bool) {
-        return false;
     }
 }
