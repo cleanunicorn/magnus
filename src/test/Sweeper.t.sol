@@ -5,6 +5,7 @@ import "ds-test/test.sol";
 
 import { Sweeper } from "../Sweeper.sol";
 import "./utils/Token.sol";
+import "./utils/Caller.sol";
 
 contract SweeperTest is DSTest {
     Sweeper sweeper;
@@ -31,4 +32,37 @@ contract SweeperTest is DSTest {
         assertEq(token.balanceOf(address(sweeper)), 0);
         assertEq(token.balanceOf(address(this)), 1000);
     }
+
+    function testOnlyAdminCanSweep() public {
+        // Create a user without permission to sweep
+        User user = new User();
+
+        // Create tokens and add them to the sweeper
+        token.mint(address(this), 1000);
+        token.transfer(address(sweeper), 100);
+
+        // Try to withdraw tokens as a different user
+        (bool ok, /* bytes memory data */) = user.call(
+            address(sweeper),
+            abi.encodeWithSelector(
+                sweeper.sweep.selector,
+                token,
+                address(user),
+                100
+            )
+        );
+
+        assertTrue(!ok, "Should not be able to sweep tokens without permission");
+    }
+
+    function testShouldBeAbleToAddOwnersList() public {
+        // Create a user
+        User user = new User();
+
+        assertTrue(!sweeper.isOwner(address(user)), "Should not be owner");
+        sweeper.addOwner(address(user));
+        assertTrue(sweeper.isOwner(address(user)), "Should be owner");
+    }
 }
+
+contract User is Caller {}
