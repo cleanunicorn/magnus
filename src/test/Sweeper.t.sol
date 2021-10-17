@@ -63,6 +63,21 @@ contract SweeperTest is DSTest {
         sweeper.addOwner(address(user));
         assertTrue(sweeper.isOwner(address(user)), "Should be owner");
     }
+
+    function testFuzzSweepAmount(uint amountToSweep, uint amountToMint) public {
+        if (amountToSweep  > amountToMint) {
+            return;
+        }
+
+        token.mint(address(this), amountToMint);
+
+        token.transfer(address(sweeper), amountToSweep);
+        assertEq(token.balanceOf(address(sweeper)), amountToSweep);
+
+        sweeper.sweep(token, address(this), amountToSweep);
+        assertEq(token.balanceOf(address(sweeper)), 0);
+        assertEq(token.balanceOf(address(this)), amountToMint);
+    }
 }
 
 contract User is Caller {}
