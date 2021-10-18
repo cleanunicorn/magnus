@@ -9,30 +9,27 @@ contract MasterSweeper {
     Sweeper[] internal sweepers;
 
     function deploySweeper() external returns (address) {
-        Sweeper new_sweeper =  new Sweeper();
+        Sweeper new_sweeper = new Sweeper();
         sweepers.push(new_sweeper);
 
         return address(new_sweeper);
     }
 
-    function sweeperCount() external view returns (uint) {
+    function sweeperCount() external view returns (uint256) {
         return sweepers.length;
     }
 
-    function getSweeper(uint index) external view returns (address) {
+    function getSweeper(uint256 index) external view returns (address) {
         return address(sweepers[index]);
     }
 
     function sweepAll(address[] calldata tokens) external {
-        uint sweeper_count = sweepers.length;
+        uint256 sweeper_count = sweepers.length;
 
-        for (uint i = 0; i < sweeper_count; i++) {
+        for (uint256 i = 0; i < sweeper_count; i++) {
             Sweeper sweeper = sweepers[i];
 
-            sweeper.sweepAll(
-                tokens,
-                msg.sender
-            );
+            sweeper.sweepAll(tokens, msg.sender);
         }
     }
 }
