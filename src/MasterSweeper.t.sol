@@ -3,10 +3,10 @@ pragma solidity ^0.8.0;
 
 import "ds-test/test.sol";
 
-import {Sweeper} from "../Sweeper.sol";
-import {MasterSweeper} from "../MasterSweeper.sol";
-import "./utils/Token.sol";
-import "./utils/Caller.sol";
+import {Sweeper} from "./Sweeper.sol";
+import {MasterSweeper} from "./MasterSweeper.sol";
+import "./test/utils/Token.sol";
+import "./test/utils/Caller.sol";
 
 contract MasterSweeperTest is DSTest {
     MasterSweeper private master_sweeper;

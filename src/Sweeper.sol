@@ -16,11 +16,11 @@ contract Sweeper {
     }
 
     function sweep(
-        IERC20 _token,
+        address _token,
         address _to,
         uint256 _value
     ) public onlyOwner {
-        _token.transfer(_to, _value);
+        IERC20(_token).transfer(_to, _value);
     }
 
     function sweepAll(address[] calldata _tokens, address _to)

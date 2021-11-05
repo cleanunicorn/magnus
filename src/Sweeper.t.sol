@@ -3,9 +3,9 @@ pragma solidity ^0.8.0;
 
 import "ds-test/test.sol";
 
-import {Sweeper} from "../Sweeper.sol";
-import "./utils/Token.sol";
-import "./utils/Caller.sol";
+import {Sweeper} from "./Sweeper.sol";
+import "./test/utils/Token.sol";
+import "./test/utils/Caller.sol";
 
 contract SweeperTest is DSTest {
     Sweeper private sweeper;
@@ -25,7 +25,7 @@ contract SweeperTest is DSTest {
         token.transfer(address(sweeper), 100);
         assertEq(token.balanceOf(address(sweeper)), 100);
 
-        sweeper.sweep(token, address(this), 100);
+        sweeper.sweep(address(token), address(this), 100);
         assertEq(token.balanceOf(address(sweeper)), 0);
         assertEq(token.balanceOf(address(this)), 1000);
     }
@@ -42,7 +42,7 @@ contract SweeperTest is DSTest {
         (
             bool ok, /* bytes memory data */
 
-        ) = user.call(
+        ) = user.externalCall(
                 address(sweeper),
                 abi.encodeWithSelector(
                     sweeper.sweep.selector,
@@ -90,9 +90,17 @@ contract SweeperTest is DSTest {
         token.transfer(address(sweeper), amountToSweep);
         assertEq(token.balanceOf(address(sweeper)), amountToSweep);
 
-        sweeper.sweep(token, address(this), amountToSweep);
+        sweeper.sweep(address(token), address(this), amountToSweep);
         assertEq(token.balanceOf(address(sweeper)), 0);
         assertEq(token.balanceOf(address(this)), amountToMint);
+    }
+
+    function invariant_onlySetOwnerCanSweep() public {
+        token.mint(address(sweeper), 1000);
+
+        // sweeper.sweep(address(token), address(this), 1);
+
+        assertEq(token.balanceOf(address(this)), 0);
     }
 }
 
